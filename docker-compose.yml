@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3'
 services:
     composer:
         image: composer:latest
@@ -10,6 +10,8 @@ services:
         command: "cd ${PROJECT_NAME} && composer install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader"
         links:
             - nginx
+        extra_hosts:
+            - "docker-host.localhost:127.0.0.1"
 
     nginx:
         image: nginx:latest
