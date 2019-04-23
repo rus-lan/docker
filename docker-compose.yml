@@ -1,36 +1,35 @@
 version: '3'
 services:
-    composer:
-        image: composer:latest
-        volumes:
-            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
-        working_dir: ${APP_PATH_CONTAINER}
-        command: "cd ${PROJECT_NAME} && ll ./ && composer install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader"
-        links:
-            - nginx
-        extra_hosts:
-            - "docker-host.localhost:127.0.0.1"
+#    composer:
+#        image: composer:1.8
+#        volumes:
+#            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+#        working_dir: ${APP_PATH_CONTAINER}
+#        volumes_from:
+#            - php
+#        links:
+#            - nginx
+#            - php
+#        command: 'cd ${PROJECT_NAME} && /usr/bin/composer install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader'
 
     nginx:
         image: nginx:latest
         container_name: nginx
         restart: always
         ports:
-            - 8040:80
+            - 8000:80
         working_dir: ${APP_PATH_CONTAINER}
         volumes:
             - ${NGINX_PATH_CONF_HOST}:${NGINX_PATH_CONF_CONTAINER}
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
         links:
             - php
-        command: "service nginx restart"
 
     php:
         build: ./php
-        expose:
-            - 9000
         environment:
             TIMEZONE: Europe/Moskow
         volumes:
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
         working_dir: ${APP_PATH_CONTAINER}
+        command: 'rm -rf ${PROJECT_NAME} && git clone https://github.com/rus-lan/image-optimizer.git ${PROJECT_NAME}'

@@ -18,8 +18,4 @@ RUN apt-get update \
 
 RUN usermod -u 1000 www-data
 
-RUN git clone https://github.com/rus-lan/image-optimizer.git
-
-EXPOSE 9000
-
 CMD ["php-fpm"]
