@@ -1,16 +1,14 @@
-version: '3'
+version: '3.3'
 services:
-#    composer:
-#        image: composer:1.8
-#        volumes:
-#            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
-#        working_dir: ${APP_PATH_CONTAINER}
-#        volumes_from:
-#            - php
-#        links:
-#            - nginx
-#            - php
-#        command: 'cd ${PROJECT_NAME} && /usr/bin/composer install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader'
+    composer:
+        image: composer:1.8
+        volumes:
+            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+        working_dir: ${APP_PATH_CONTAINER}
+        links:
+            - nginx
+            - php
+        command: 'composer install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader -d ./${PROJECT_NAME}'
 
     nginx:
         image: nginx:latest
@@ -20,7 +18,7 @@ services:
             - 8000:80
         working_dir: ${APP_PATH_CONTAINER}
         volumes:
-            - ${NGINX_PATH_CONF_HOST}:${NGINX_PATH_CONF_CONTAINER}
+            - ${NGINX_PATH_SERVER_HOST}:${NGINX_PATH_SERVER_CONTAINER}
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
         links:
             - php
@@ -32,4 +30,4 @@ services:
         volumes:
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
         working_dir: ${APP_PATH_CONTAINER}
-        command: 'rm -rf ${PROJECT_NAME} && git clone https://github.com/rus-lan/image-optimizer.git ${PROJECT_NAME}'
+        command: 'git clone https://github.com/rus-lan/image-optimizer.git ${PROJECT_NAME}'
