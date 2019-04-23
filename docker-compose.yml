@@ -1,0 +1,33 @@
+version: '3.3'
+services:
+    composer:
+        image: composer:latest
+        volumes:
+            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+        working_dir: ${APP_PATH_CONTAINER}
+        command: "cd ${PROJECT_NAME} && composer install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader"
+        links:
+            - nginx
+
+    nginx:
+        image: nginx:latest
+        container_name: nginx
+        restart: always
+        depends_on:
+            - php
+        ports:
+            - 8080:80
+        working_dir: ${APP_PATH_CONTAINER}
+        volumes:
+            - ${NGINX_PATH_CONF_HOST}:${NGINX_PATH_CONF_CONTAINER}
+            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+        links:
+            - php
+        command: "service nginx restart"
+    php:
+        build: ./php
+        environment:
+            TIMEZONE: Europe/Moskow
+        volumes:
+            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+        working_dir: ${APP_PATH_CONTAINER}
