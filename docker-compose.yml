@@ -2,12 +2,10 @@ version: '3'
 services:
     composer:
         image: composer:latest
-        expose:
-            - 9000
         volumes:
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
         working_dir: ${APP_PATH_CONTAINER}
-        command: "cd ${PROJECT_NAME} && composer install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader"
+        command: "cd ${PROJECT_NAME} && ll ./ && composer install --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader"
         links:
             - nginx
         extra_hosts:
@@ -18,7 +16,7 @@ services:
         container_name: nginx
         restart: always
         ports:
-            - 8080:80
+            - 8040:80
         working_dir: ${APP_PATH_CONTAINER}
         volumes:
             - ${NGINX_PATH_CONF_HOST}:${NGINX_PATH_CONF_CONTAINER}
@@ -29,6 +27,8 @@ services:
 
     php:
         build: ./php
+        expose:
+            - 9000
         environment:
             TIMEZONE: Europe/Moskow
         volumes:
