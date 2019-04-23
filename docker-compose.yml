@@ -2,6 +2,8 @@ version: '3.3'
 services:
     composer:
         image: composer:latest
+        expose:
+            - 9000
         volumes:
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
         working_dir: ${APP_PATH_CONTAINER}
@@ -13,8 +15,6 @@ services:
         image: nginx:latest
         container_name: nginx
         restart: always
-        depends_on:
-            - php
         ports:
             - 8080:80
         working_dir: ${APP_PATH_CONTAINER}
