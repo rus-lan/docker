@@ -2,6 +2,7 @@ version: '3.3'
 services:
     composer:
         image: composer:1.8
+        container_name: composer
         volumes:
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
         working_dir: ${APP_PATH_CONTAINER}
@@ -20,14 +21,19 @@ services:
         volumes:
             - ${NGINX_PATH_SERVER_HOST}:${NGINX_PATH_SERVER_CONTAINER}
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+            - ${NGINX_PATH_LOG_HOST}:${NGINX_PATH_LOG_CONTAINER}
         links:
             - php
 
     php:
-        build: ./php
+        build: ./resources/php
+        container_name: php-fpm
         environment:
             TIMEZONE: Europe/Moskow
         volumes:
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
         working_dir: ${APP_PATH_CONTAINER}
+        user: ${USER_NAME}:${USER_NAME}
+        ports:
+            - 9000:9000
         command: 'git clone https://github.com/rus-lan/image-optimizer.git ${PROJECT_NAME}'
